@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - Untitled</title>
+  
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.3s;
+        }
+        .calculator {
+            width: 375px; /* Updated width */
+            height: 812px; /* Updated height */
+            background: linear-gradient(to bottom right, #e6f2ff, #f0e6ff);
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .display {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 24px;
+            color: #333;
+        }
+        .secondary-display {
+            text-align: right;
+            font-size: 24px;
+            margin-bottom: 8px;
+            height: 32px;
+            overflow: hidden;
+        }
+        .primary-display {
+            text-align: right;
+            font-size: 60px;
+            font-weight: 300;
+            margin-bottom: 16px;
+            height: 80px;
+            overflow: hidden;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            padding: 24px;
+            background-color: white;
+        }
+        .button {
+            width: 70px; /* Adjusted button size */
+            height: 70px; /* Adjusted button size */
+            border-radius: 50%;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            user-select: none;
+        }
+        .button:active {
+            transform: scale(0.95);
+        }
+        .operator {
+            background-color: #ffa500;
+            color: white;
+        }
+        .operator:hover {
+            background-color: #ff9500;
+        }
+        .number, .function {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+        .number:hover, .function:hover {
+            background-color: #d0d0d0;
+        }
+        .span-2 {
+            grid-column: span 2;
+            width: 152px; /* Adjusted for new size */
+            border-radius: 40px;
+        }
+        .dark-mode .calculator {
+            background: linear-gradient(to bottom right, #2a2a2a, #3a3a3a);
+        }
+        .dark-mode .display {
+            color: white;
+        }
+        .dark-mode .buttons {
+            background-color: #1a1a1a;
+        }
+        .dark-mode .number, .dark-mode .function {
+            background-color: #333;
+            color: white;
+        }
+        .dark-mode .number:hover, .dark-mode .function:hover {
+            background-color: #444;
+        }
+        .dark-mode .operator {
+            background-color: #ff7700;
+        }
+        .dark-mode .operator:hover {
+            background-color: #ff8800;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display">
+            <div class="secondary-display" id="secondaryDisplay"></div>
+            <div class="primary-display" id="primaryDisplay">0</div>
+        </div>
+        <div class="buttons">
+            <div class="button span-2 function" onclick="clearDisplay()">C</div>
+            <div class="button function" onclick="toggleSign()">±</div>
+            <div class="button operator" onclick="handleInput('/')">÷</div>
+            <div class="button number" onclick="handleInput('7')">7</div>
+            <div class="button number" onclick="handleInput('8')">8</div>
+            <div class="button number" onclick="handleInput('9')">9</div>
+            <div class="button operator" onclick="handleInput('*')">×</div>
+            <div class="button number" onclick="handleInput('4')">4</div>
+            <div class="button number" onclick="handleInput('5')">5</div>
+            <div class="button number" onclick="handleInput('6')">6</div>
+            <div class="button operator" onclick="handleInput('-')">-</div>
+            <div class="button number" onclick="handleInput('1')">1</div>
+            <div class="button number" onclick="handleInput('2')">2</div>
+            <div class="button number" onclick="handleInput('3')">3</div>
+            <div class="button operator" onclick="handleInput('+')">+</div>
+            <div class="button function" onclick="percentage()">%</div>
+            <div class="button number" onclick="handleInput('0')">0</div>
+            <div class="button number" onclick="handleInput('.')">.</div>
+            <div class="button operator" onclick="calculate()">=</div>
+            <div class="button function" onclick="squareRoot()">√</div>
+            <div class="button function" onclick="square()">x²</div>
+            <div class="button span-2 function" onclick="toggleDarkMode()" id="darkModeToggle">🌙</div>
+        </div>
+    </div>
+
+    <script>
+        let display = '0';
+        let secondaryDisplay = '';
+        let isDarkMode = false;
+
+        const primaryDisplayElement = document.getElementById('primaryDisplay');
+        const secondaryDisplayElement = document.getElementById('secondaryDisplay');
+        const darkModeToggleElement = document.getElementById('darkModeToggle');
+
+        function updateDisplay() {
+            primaryDisplayElement.textContent = display;
+            secondaryDisplayElement.textContent = secondaryDisplay;
+        }
+
+        function handleInput(value) {
+            if (display === '0') {
+                display = value;
+            } else {
+                display += value;
+            }
+            updateDisplay();
+        }
+
+        function clearDisplay() {
+            display = '0';
+            secondaryDisplay = '';
+            updateDisplay();
+        }
+
+        function toggleSign() {
+            display = (parseFloat(display) * -1).toString();
+            updateDisplay();
+        }
+
+        function percentage() {
+            display = (parseFloat(display) / 100).toString();
+            updateDisplay();
+        }
+
+        function squareRoot() {
+            display = Math.sqrt(parseFloat(display)).toString();
+            updateDisplay();
+        }
+
+        function square() {
+            display = Math.pow(parseFloat(display), 2).toString();
+            updateDisplay();
+        }
+
+        function calculate() {
+            try {
+                secondaryDisplay = display;
+                display = eval(display).toString();
+                updateDisplay();
+            } catch (error) {
+                display = 'Error';
+                updateDisplay();
+            }
+        }
+
+        function toggleDarkMode() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark-mode');
+            darkModeToggleElement.textContent = isDarkMode ? '☀️' : '🌙';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            const key = e.key;
+            if (/[0-9+\-*/.%]/.test(key)) {
+                handleInput(key);
+            } else if (key === 'Enter') {
+                calculate();
+            } else if (key === 'Escape') {
+                clearDisplay();
+            }
+        });
+    </script>
+</body>
+</html>
+<!-- partial -->
+  
+</body>
+</html>
